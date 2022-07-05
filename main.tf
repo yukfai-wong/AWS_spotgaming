@@ -62,6 +62,10 @@ data "aws_instance" "spot_retrieve" {
     name   = "tag:Name"
     values = ["SpotGaming"]
   }
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
   get_password_data = true
 
   depends_on = [resource.aws_spot_fleet_request.cheap_computer]
@@ -69,7 +73,7 @@ data "aws_instance" "spot_retrieve" {
 
 output "Administrator_Password" {
   value = rsadecrypt(data.aws_instance.spot_retrieve.
-password_data, file("${var.keypair_dir}"))
+  password_data, file("${var.keypair_dir}"))
 }
 output "spot-ips" {
   value = data.aws_instance.spot_retrieve.public_ip
